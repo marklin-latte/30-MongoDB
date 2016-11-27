@@ -1,14 +1,14 @@
 # 30-1 MongoDB基礎
 
 ## 什麼是MongoDB
----
+
 MongoDB一種強大，靈活、且易於擴展的文件導向式(document-oriented)資料庫，與傳統的關聯式導向資料庫相比，它不再有'row'的概念，取而代之的是'document'的概念。
 
 (一張圖表示document與row的資料)
 
 
 ## MongoDB的優缺與缺點
----
+
 
 ### 優點
 * Schema-less : MongoDB擁有非常彈性的`Schemam`，這在RDBMS中非常難以高效能的方法來實現。
@@ -22,7 +22,7 @@ MongoDB一種強大，靈活、且易於擴展的文件導向式(document-orient
 
 
 ## MongoDB的組成`Document`與`Collection`
----
+
 
 ### Document
 `Document`是MongoDB的核心，它就是`Key`對應個`Value`組合，例如下列範例。
@@ -55,7 +55,7 @@ MongoDB一種強大，靈活、且易於擴展的文件導向式(document-orient
 
 
 ## 參考資料
----
+
 * [http://www.adathedev.co.uk/2011/02/thoughts-on-mongodb-from-sql-server-dev.html](http://www.adathedev.co.uk/2011/02/thoughts-on-mongodb-from-sql-server-dev.html)
 * [https://read01.com/BznRQJ.html
 ](https://read01.com/BznRQJ.html)
