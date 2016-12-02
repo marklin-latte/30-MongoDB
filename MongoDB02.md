@@ -1,7 +1,6 @@
-# 30-2 : 使用Docker來建構MongoDB
+# 30-2之使用Docker來建構MongoDB
 
-由於網站上已經有很多`mongodb`的安裝方法，所以本篇將說明，如何使用`Docker`來建立`可使用mongodb的環境`，這也代表你的電腦只要有安裝`docker`，都可以使用`mongodb`，不需要再去找各種系統的安裝方法，以及最後幾篇會用`docker`來模擬擴展多台的`mongodb`。
-
+由於網站上已經有很多`mongodb`的安裝方法，所以本篇將說明，如何使用`Docker`來建立`可使用mongodb的環境`，這也代表你的電腦只要有安裝`docker`，都可以使用`mongodb`，不再需要去找各種東西的安裝方法。
 
 ## 安裝`Docker`
 
@@ -50,7 +49,7 @@ services:
 
 ![Alt text](http://yixiang8780.com/outImg/20161129-1.png)
 
-## 進入Docker Container裡的操作MongoDB
+## 進入Docker Container裡操作MongoDB
 
 在執行完`docker-compose up`後，換到另一個`shell`，然後你可以執行`docker ps`指令來確定有`mongodb`的`container`有沒有執行，你可以把`container`想成為一個很小的`VM`。
 
@@ -62,12 +61,15 @@ services:
 
 ![Alt text](http://yixiang8780.com/outImg/20161129-3.png)
 
-然後在執行`mongo`你就可以執行`mongodb`的指令囉。
+最後在執行`mongo`你就可以執行`mongodb`的指令囉。
 
 ![Alt text](http://yixiang8780.com/outImg/20161129-4.png)
 
 
+## 結語
+`docker`如果學會真的是很方便，如果是在`team`中，有新人來，不在需要和他說要安裝啥、安裝啥、然後卡到大喊學長救我，學長事實上會有點……，除非人真的很好，又或是他對你有意思。
 
+各位`+u^2`。
 
 ## 參考資料
 

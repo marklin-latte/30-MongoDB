@@ -56,7 +56,7 @@
 
 整體而言他們兩個關係長這樣。
 
-![](http://yixiang8780.com/outImg/20161128-2.png)
+![](http://yixiang8780.com/outImg/20161128-1.png)
 
 
 ## 結語

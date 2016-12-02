@@ -12,42 +12,42 @@ db.open(function() {
     /*
      * Insert測試 
      */
-    //var datas = [];
-    //for (var i = 0; i < count; i++) {
-      //datas.push({
-        //"name": "Mark",
-        //"age": "20",
-        //"size": i
-      //});
-    //}
-    //console.time("Insert time");
-		//collection.insert(datas, function(err, res) {
-      //if (res) {
-        //console.timeEnd("Insert time");
-      //} else {
-        //console.log("insert error");
-      //}
-    //});
+    var datas = [];
+    for (var i = 0; i < count; i++) {
+      datas.push({
+        "name": "Mark",
+        "age": "20",
+        "size": i
+      });
+    }
+    console.time("Insert time");
+		collection.insert(datas, function(err, res) {
+      if (res) {
+        console.timeEnd("Insert time");
+      } else {
+        console.log("insert error");
+      }
+    });
 
     /*
      * InsertMany測試 
      */
-    //var datas = [];
-    //for (var i = 0; i < count; i++) {
-      //datas.push({
-        //"name": "Mark",
-        //"age": "20",
-        //"size": i
-      //});
-    //}
-    //console.time("InsertMany time");
-		//collection.insertMany(datas, function(err, res) {
-      //if (res) {
-        //console.timeEnd("InsertMany time");
-      //} else {
-        //console.log("insert error");
-      //}
-    //});
+    var datas = [];
+    for (var i = 0; i < count; i++) {
+      datas.push({
+        "name": "Mark",
+        "age": "20",
+        "size": i
+      });
+    }
+    console.time("InsertMany time");
+		collection.insertMany(datas, function(err, res) {
+      if (res) {
+        console.timeEnd("InsertMany time");
+      } else {
+        console.log("insert error");
+      }
+    });
 
     /*
      *Unordered Bulk Insert 測試 
@@ -72,21 +72,21 @@ db.open(function() {
     /*
      *Ordered Bulk Insert 測試 
      */
-    //var datas = [];
-    //for (var i = 0; i < count; i++) {
-      //datas.push({
-        //"name": "Mark",
-        //"age": "20",
-        //"size": i
-      //});
-    //}
-    //console.time("OrderedBulk Insert");
-    //var bulk = collection.initializeOrderedBulkOp();
-    //for (var i = 0; i < count; i++) {
-      //bulk.insert(datas[i]);
-    //}
-    //bulk.execute(function(err, res) {
-      //console.timeEnd("OrderedBulk Insert");
-    //});
+    var datas = [];
+    for (var i = 0; i < count; i++) {
+      datas.push({
+        "name": "Mark",
+        "age": "20",
+        "size": i
+      });
+    }
+    console.time("OrderedBulk Insert");
+    var bulk = collection.initializeOrderedBulkOp();
+    for (var i = 0; i < count; i++) {
+      bulk.insert(datas[i]);
+    }
+    bulk.execute(function(err, res) {
+      console.timeEnd("OrderedBulk Insert");
+    });
   });
 });
