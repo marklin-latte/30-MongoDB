@@ -63,6 +63,8 @@ db.user.update({"name":"mark"},{"$set" : { "age" : 18} })
 ## 修改器`$inc`
 假設一下情景，假如有個投票網站、或是要存放訪客數的功能，每次更新時都是要`+1`，這種時後就可以用`$inc`來更新你的`document`，理論上來說速度應該會優於`$set`，等會兒會來測試一下。
 
+注意`$inc`只能用在數值類型，否則就會提示`Modifier $inc allowed for numbers only`。
+
 我們寫段程式碼來看看他的使用方法，下面範例我們先新增筆資料，然後我們要每次更新一次時，`like`都會加`1`，我們更新`3`次，所以理論上`like`會變為`3`。
 
 ```
@@ -148,26 +150,30 @@ db.open(function() {
       "Like": 0
     });
     bulk.execute(function(err, res) {
-      console.time("update use $inc");
-			var funcs = [];
-      for (var j = 1; j < count+1;j++) {
-			funcs.push(updateUseInc(1));	
-      }
-		Promise.all(funcs).then((res) => {
-         console.timeEnd("update use $inc");
-		});
+            
+		var funcs = [];
+		udpateUseInc().then((res) => {
+		console.time("update use $inc");
+		  for (var j = 1; j < count+1;j++) {
+			 funcs.push(updateUseInc(1));	
+      	  }
+		  Promise.all(funcs).then((res) => {
+           console.timeEnd("update use $inc");
+		  });
+		})
+
     });
-	function updateUseInc(j) {
+	function updateUseInc() {
 		return new Promise((resolve,reject) => {
 			
          collection.update({
          		 "name": "steven"
        	 }, {
        	   "$inc": {
-        		    "Like": j 
+        		  "Like": 1 
        	 }
        	 }, function(err, res) {
-					resolve(j);
+				resolve();
          });
 	   });	
 	}
@@ -175,14 +181,23 @@ db.open(function() {
 });
 
 ```
+測試結果，`$inc`在更新數據時，完全贏過`$set`。
 
 | 測試案例(更新次數)       | $set           | $inc  |
-| ------------- |:-------------:| -----:|
-| 10      | 35ms | 27ms |
-| 1000      | 406ms      |   679ms |
-| 100000 | are neat      |    $1 |
+| :-------------: |:-------------:| :-----:|
+| 10      | 39ms | 19ms |
+| 1000      | 317ms      |   257ms |
+| 10000 | 4159ms      |    3206ms |
+| 50000 | 31893ms      |    15929ms |
+| 100000 | 154861ms      |    129684ms |
+
+## 結語
+事實上寫這篇時，一開始發現為啥`$inc`執行時間總是大於`$set`，不符合預期，一直覺得怪怪的後來查來了一下發現`update`、`query`、`delete`這三種方法執行時都會`lock`住`DB`，所以上面的程式碼，第二個`updateUseInc`要先執行一次確定`updateUseSet`完畢後才開始計時。
+
+P.S  `+u^5`之我感冒囉…
 
 
-
+## 參考資料
+* https://docs.mongodb.com/v3.0/faq/concurrency/
 
 

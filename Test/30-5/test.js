@@ -21,18 +21,18 @@ db.open(function() {
     });
     bulk.execute(function(err, res) {
       console.time("update use $set");
-			var funcs = [];
-      for (var i = 1; i < count+1; i++) {
-				funcs.push(updateUseSet(i));	
+      var funcs = [];
+      for (var i = 1; i < count + 1; i++) {
+        funcs.push(updateUseSet(i));
       }
-			Promise.all(funcs).then((res) => {
-         console.timeEnd("update use $set");
-			});
+      Promise.all(funcs).then((res) => {
+        console.timeEnd("update use $set");
+      });
     });
 
-		function updateUseSet(i) {
-			return new Promise((resolve,reject) => {
-			
+    function updateUseSet(i) {
+      return new Promise((resolve, reject) => {
+
         collection.update({
           "name": "mark"
         }, {
@@ -40,10 +40,10 @@ db.open(function() {
             "Like": i
           }
         }, function(err, res) {
-					resolve(i);
+          resolve(i);
         });
-			});	
-		}
+      });
+    }
 
     /*
      * Update use $inc 測試 
@@ -55,28 +55,32 @@ db.open(function() {
       "Like": 0
     });
     bulk.execute(function(err, res) {
-      console.time("update use $inc");
-			var funcs = [];
-      for (var j = 1; j < count+1;j++) {
-				funcs.push(updateUseInc(1));	
-      }
-			Promise.all(funcs).then((res) => {
-         console.timeEnd("update use $inc");
-			});
+      var funcs = [];
+
+      updateUseInc().then(res => {
+        console.time("update use $inc");
+        for (var j = 2; j < count + 1; j++) {
+          funcs.push(updateUseInc());
+        }
+        Promise.all(funcs).then((res) => {
+          console.timeEnd("update use $inc");
+        });
+      })
     });
-		function updateUseInc(j) {
-			return new Promise((resolve,reject) => {
-			
+
+    function updateUseInc() {
+      return new Promise((resolve, reject) => {
+
         collection.update({
           "name": "steven"
         }, {
           "$inc": {
-            "Like": j 
+            "Like": 1
           }
         }, function(err, res) {
-					resolve(j);
+          resolve();
         });
-			});	
-		}
+      });
+    }
   });
 });
