@@ -1,9 +1,8 @@
-# 30-4 (CRUD)Bulk與新增的效能測試…喔
+# 30-4之CRUD的Bulk與新增效能測試…喔
 
 本篇文章運用上一篇提到的二種新增方法`insert`、`insertMany`，以及另一種新增方法`Bulk`來做執行速度比較，由於`insertMany`在`mongodb shell`執行完會直接輸出結果，所以如果有1萬筆資料他就會一直跑一直跑……跑到天荒地老，看不到我用來計算執行時間的方法，所以本測試打算用`node js`來建立測試方法。
 
 在開始測試之前，先介紹一下另一個新增方法`Bulk Insert`。
-
 
 ## Bulk Insert
 
@@ -37,11 +36,11 @@ bulk.execute();
 
 ## 建立測試環境
 
-首先我們先建立個新的資料夾，然後在裡面執行`npm init`來產生`package.json`檔，然後我們需要的元件為`mongodb`，這是`mongodb native driver`，然後透過`npm install mongodb --save`來進行安裝。
+首先我們先建立個新的資料夾，然後在裡面執行`npm init`來產生`package.json`檔，最後我們需要的元件為`mongodb`，這是`mongodb native driver`，透過`npm install mongodb --save`來進行安裝。
 
-然後接下來我們建立測試檔案`test.js`，內容如下，並附上[github](https://github.com/h091237557/30-MongoDB/Test/30-4)連結。
+接下來我們建立測試檔案`test.js`，內容如下，並附上[github](https://github.com/h091237557/30-MongoDB/tree/master/Test/30-4)連結。
 
-下面的程式碼有個很詭異的地方，測試資料`datas`產生了三次而且完全一模一樣，會這樣寫是因為如果只寫一個`datas`然後給三個方法新增，會發生`Duplicate ObjectId`，也就是說用通一個物件去新增，它所建立的`ObjectId`會一樣，然後就會出錯，這邊可能要去查一下`mongodb native driver `的原始才知道為啥會降。
+下面的程式碼有個很詭異的地方，測試資料`datas`產生了三次而且完全一模一樣，會這樣寫是因為如果只寫一個`datas`然後給三個方法新增，會發生`Duplicate ObjectId`，也就是說用同一個物件去新增，它所建立的`ObjectId`會一樣，然後就會出錯，這邊可能要去查一下`mongodb native driver `的原始碼才知道為啥會降。
 
 ```
 var mongodb = require('mongodb');
@@ -159,11 +158,13 @@ db.open(function() {
 }
 
 ```
-執行結果如下，每筆數測試都會執行兩次，並且不同筆數測試會先將預分配空間完全清楚，從下面可以知道幾點事情。
+執行結果如下，每筆數測試都會執行兩次，並且不同筆數測試會先將預分配空間完全清除。
+
+從下面執行結果可以知道幾點事情。
 
 * 在數據量較大情況下使用`Bulk`操作都名顯優於`insert、insertMany`。
 * `insertMany`不管數量大小都優於`insert`(誒!?...那要`insert`做啥)。
-* 預分配的確可以增加點兒速度，但在數據量越大時越不名顯的fu。
+* 預分配的確可以增加點兒速度，但在數據量越大時越不名顯的fu(怪怪)。
 
 
 | 測試案例(筆數大小)        | Insert           | InsertMany  | Ordered Bulk | Unordered Bulk|
@@ -190,7 +191,7 @@ db.open(function() {
 而如果是要新增例如`log`之類的可以用`Unordered Bulk`，因為掉一筆也不一定會死，
 但如果是掉一筆會死的請用`Ordered Bulk`。
 
-不過說實話，我不是啥`mongodb`的專家，所以如果測試的方法或結語有問題的話，請和我說一下~感謝~，至於那個1千萬筆的我再研究……。
+如果測試的方法或結語有問題的話，請和我說一下~感謝~，至於那個1千萬筆的我再研究……。
 
 P.S 今日出來是`Bob`。
 

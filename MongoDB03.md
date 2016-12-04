@@ -91,7 +91,7 @@ db.user.insertOne(user1);
 ![](http://yixiang8780.com/outImg/20161130-2.png)
 
 ## InsertMany()
-InsertMany函數是mongodb 3.2版時新增的，用法也和insert函數差不多，但比較不同的是他的回傳值如下，他會回傳所有所建立的`documnet`的`ObjectId`。
+InsertMany函數是`mongodb 3.2`版時新增的，用法也和`insert`函數差不多，但比較不同的是他的回傳值如下，他會回傳所有所建立的`documnet`的`ObjectId`。
 
 ```
 {
@@ -130,7 +130,7 @@ db.user.insertMany(users,{ordered:false})
 
 
 ## 結語
-這三種方法事實上用法大同小意，有時只差在回傳值，如果需要回傳`ObjectId`的話就用`insertMany`或`insertOne`，不需要的話就用`insert`就行了，對了還有這三個方法如果要新增到的`collection`不存在會自動幫你建立，至於速度方法我們將於下一篇做比較。
+這三種方法事實上用法大同小異，有時只差在回傳值，如果需要回傳`ObjectId`的話就用`insertMany`或`insertOne`，不需要的話就用`insert`就行了，對了還有這三個方法如果要新增到的`collection`不存在的話會自動幫你建立，至於速度方法我們將於下一篇做比較。
 
 P.S 不要愛上我的Kevin ~ 
 
