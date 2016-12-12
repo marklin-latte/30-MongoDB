@@ -60,6 +60,8 @@ db.tests.getIndexs()
 ## ~索引排序與不用索引排序差別~
 在`mongodb`中排序是非常的耗費內存資源，如果排序時內存耗費到`32mb`([這裡](https://docs.mongodb.com/v3.0/tutorial/sort-results-with-indexes/))，`mongodb`就會報錯，如果超出值，那麼必須使用索引來獲取經過排序的結果。
 
+>索引的值是按一定順序排序的，因此使用索引鍵對`document`進行排序非常的快。
+
 我們這裡建立先資料，來比較看看兩者的資源耗費不同點。
 
 ```
