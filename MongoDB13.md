@@ -1,5 +1,5 @@
-# 30-13之索引---特殊索引
-本篇文章將要說明幾個比較特別索引如下。
+# 30-13之索引(3)---比較特別的索引使用
+本篇文章將要說明幾個比較特別索引的使用方法如下。
 
 * 索引陣列欄位
 * 索引子欄位
@@ -142,7 +142,7 @@ db.posts.find({ "$text" : { "$search" : "\"mongodb can\"" }})
 
 ![](http://yixiang8780.com/outImg/20161211-2.png)
 
-而如想要要尋找`mongodb`或`word`的`document`，則如下
+想要尋找`mongodb`或`word`的`document`，則使用下面的搜尋式。
 
 ```
 db.posts.find({ "$text" : { "$search" : "mongodb word" }})
