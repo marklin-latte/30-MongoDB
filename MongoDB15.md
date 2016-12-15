@@ -1,10 +1,10 @@
-# 30-15之聚合(2)---`pipeline`表達式
-在上一篇文章中說明了`pipeline`操作符號，接下來我們這篇要說明，在操作符號內使用的`pipeline`表達示，也就是說可以進行計算、比較、字串修改等。
+# 30-15之聚合(2)---Pipeline武器庫
+在上一篇文章中說明了`pipeline`操作符號，接下來我們這篇要說明在操作符號內使用的`pipeline`表達式，它讓我們可以在`pipeline`內進行計算、比較、字串修改等分析方法。
 
-* 數學表達式(mathematical expression)
-* 日期表達式(date expression)
-* 字串表達式(string expression)
-* 邏輯表達式(logical expression)
+* 數學表達式(`mathematical expression`)
+* 日期表達式(`date expression`)
+* 字串表達式(`string expression`)
+* 邏輯表達式(`logical expression`)
 
 ## ~數學表達式~
 以下列表為比較常用的數學表達式([全部在這](https://docs.mongodb.com/v3.2/meta/aggregation-quick-reference/#arithmetic-expressions))。
@@ -17,6 +17,8 @@
 | `$divide`      |接受兩個表達式，然後相除。 |
 | `$mod`      | 接受個表達式，然後相除取餘。     |
 
+### 實際運用 ~ 我們想要知道訂單總收入是多少。
+
 我們來看看實際上是如何運用，假設我們有下列資料，該資料為訂單資料。
 
 ```
@@ -26,27 +28,28 @@
 { "id" : 4 , "price" : 10 , "count" : 210, "discount" : 200 },
 { "id" : 5 , "price" : 100 , "count" : 30, "discount" : 20 }
 ```
-### 我們想要知道我們總收入是多少。
-這個應用中，我們希望知道總收入是多少，根據收入公式。
+這個應用中，我們希望知道總收入是多少，以下為收入公式。
 
 ```
 每筆訂單收入 = price * count - discount 
 ```
-然後我們在將他拆解成`pipeline`過程，我們使用先算出每筆訂單收入，再加總起來。
+然後我們在將他拆解成`pipeline`過程，我們使用先算出每筆訂單收入，再加總起來這步驟。
 
 1. 將每筆訂單的收入計算出並存放在`income`欄位。
 2. 將所有訂單`income`欄位加總起來，並存放在`total`欄位。
 
-根據以上步驟我們可以產生出聚合方法。
+根據以上步驟我們可以產生出以下的聚合方法。
 
 ```
 db.order.aggregate ({ 
+//1. 將每筆訂單的收入計算出並存放在`income`欄位。
 	"$project" : {
 		  "id" : 1 , 
 		  "income" : { "$subtract" :
 		  		[ { $multiply : [ "$price","$count"] } , "$discount"] 
 		  }
 	},{
+2. 將所有訂單`income`欄位加總起來，並存放在`total`欄位
 	$group : {
 			"_id" : null,
 			"total" : { $sum : "$income"}
@@ -63,7 +66,7 @@ db.order.aggregate ({
 >雖然這個範例只運用到少數幾個表達式，但事實上用法都大同小異，只要會了一個基本上其它的運用起來也會很順。
 
 ## ~日期表達式~
-這種類型的表達式，大部份都是用來將一串日期轉化成你想要的單位例如月、日、年等，
+這種類型的表達式，大部份都是用來將一串日期轉化成你想要的單位例如月、日、年等。
 
 | 表達式        | 說明           | 範圍 |
 | ------------- |:-------------:| :-------------:|
@@ -77,12 +80,14 @@ db.order.aggregate ({
 | `$minute`      | 提取出該時間的分鐘     | 0~59 |
 | `$second`      | 提取出該時間的秒     | 0~60 |
 
+### 實際運用 ~ 我們想取得`date`的詳細資料。
+
 我們來看看實際轉換的結果，假設我們有下列資料。
 
 ```
 { "_id" : 1, "date" : ISODate("2016-01-02T08:10:20.651Z") }
 ```
-### 我們想取得`date`的詳細資料。
+
 
 ```
 db.test.aggregate({
@@ -129,6 +134,8 @@ db.test.aggregate({
 | `$toUpper`      |變大寫。 |
 | `$strcasecmp`      | 比較兩個字串是否相等，如果相等為0，如果字串ASCII碼大於另一字串則為1，否則為-1。     |
 
+### 實際應用 ~ 我們想取得`item`開頭為`B`的`document`，並且輸出的`describe`要全轉換為小寫。
+
 下面是我們的資料。
 
 ```
@@ -137,8 +144,6 @@ db.test.aggregate({
 { "item" : "CAA" , "describe":"BBCCaa"}
 ```
 
-### 我們想知道那個`item`開頭為`B`的`document`，並且輸出的`describe`要全轉換為小寫。
-
 我們可以根據問題，來將之拆分為以下步驟。
 
 1. 取得每個`item`的第一個值，並存放在`temp`欄位中。
@@ -146,16 +151,25 @@ db.test.aggregate({
 3. 篩選出`result`為`0`的`document`。
 4. 將該`document`的`describe`欄位轉換成小寫。
 
+以下為拆分出來的聚合方法。
+
 ```
 db.test.aggregate(
 {
+//1. 取得每個`item`的第一個值，並存放在`temp`欄位中。
 	$project : { "describe" : 1, "temp" : {"$substr":["$item",0,1]} }
 },
 {
+//2. 並且每個`temp`與`B`進行比較，比較結果放在`result`欄位中。
 	$project : { "describe" : 1, "result" : {"$strcasecmp":["$temp","B"]}}
 },
-{ $match : { "result" : 0 } },
-{ $project : { "describe" : { "$toLower" : "$describe" } } }
+{ 
+//3. 篩選出`result`為`0`的`document`。
+	$match : { "result" : 0 } 
+},
+{ 
+4. 將該`document`的`describe`欄位轉換成小寫。
+	$project : { "describe" : { "$toLower" : "$describe" } } }
 )
 ```
 
@@ -173,7 +187,7 @@ db.test.aggregate(
 
 | 表達式        | 說明           |使用| 
 | :------------- |:-------------| :-------------|
-| `$cmp`      | 比較expr1與2，相同為0，1>2為1，相反則為-1 。| `"$cmp":[expr1,expr2]`| 
+| `$cmp`      | 比較expr1與2，相同為0，1>2為1，相反則為-1 。| `"$cmp":[expr1,expr2]`|
 | `$eq`      |  一樣比較expr1與2，但相同則返回`true`否則為`false`。 |`"$eq":[expr1,expr2]`|
 | `$lt、$lte`| 小於和小於等於      | `"$lt" : value`|
 | `$gt、$gte`      |大於和大於等於 | `"$gt" : value`|
@@ -182,7 +196,9 @@ db.test.aggregate(
 | `$not`      |   針對表達示取反值  |`"$not" : expr`|
 | `$cond`      | 就是一般程式裡的`ifelse` |`"$cond":[boolExpr,trueExpr,falseExpr]`|
 
-我們來看看使用範例，首先一樣，先看看我們有的資料，如下。
+### 實際應用 ~ 我想要計算出每筆訂單的實際收入，其中當數量大於200時打八折，最後在依`class`進行分組，算出各組的總收入。
+
+首先一樣，先看看我們有的資料，如下。
 
 ```
 { "id":1,"class" : "1", "price" : 10,"count" : 180},
@@ -191,11 +207,13 @@ db.test.aggregate(
 { "id":1,"class" : "2" ,"price" : 10,"count" : 320},
 { "id":1,"class" : "2","price" : 10,"count" : 150}
 ```
-### 我想要計算出每筆訂單的實際收入，其中當數量大於200時打八折，最後在依`class`進行分組，算出各組的總收入。
+然後根據問題，我們將拆分為以下`pipeline`步驟。
 
 1. 全部的訂單先判斷折扣率，並存放在`discount`裡。
 2. 計算每分訂單的收入，並存放在`total`裡。
 3. 根據`class`進行分組，並計算各組的總收入，存放在`result`裡。
+
+以下為根據步驟所建立出的聚合方法。
 
 ```
 db.orders.aggregate(
@@ -231,7 +249,7 @@ db.orders.aggregate(
 ```
 
 ## ~結語~
-本章介紹了很多的表達式，也都用實際的範例來介紹如何使用，不過也只是用很基本的方法，
+本章介紹了很多的表達式，也都用實際的範例來說明如何使用，不過也只是用很基本的方法，
 如果要更熟練的使用這些表達式，筆者建議進行更多的實例練習，以及在練習時也要持續思考有沒有更好更快的方法，那相信你不需要多久的時間，就能很熟練囉。
 
 ## ~參考資料~
