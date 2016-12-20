@@ -7,6 +7,12 @@ services:
       - "27017:27017"
     volumes_from:
       - mongodata
+  mongo1:
+    image: mongo
+    ports:
+      - "27018:27018"
+    volumes_from:
+      - mongodata
   mongodata:
     image: tianon/true
     volumes:
