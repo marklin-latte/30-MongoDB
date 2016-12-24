@@ -11,7 +11,7 @@
 
 ![](http://yixiang8780.com/outImg/20161223-1.png)
 
-而咱們在來我看看，如果用了分片會變啥樣，如下圖，三個`mongod`都會統一通信到`mongos`，在和`client`進行通訊，`mongos`不存儲任何資料，它就是個路由`server`，你要什麼資料就發給它，它在去決定去那個`mongod`裡尋找資料。
+而咱們在來看看，如果用了分片會變啥樣，如下圖，三個`mongod`都會統一通信到`mongos`，在和`client`進行通訊，`mongos`不存儲任何資料，它就是個路由`server`，你要什麼資料就發給它，它在去決定去那個`mongod`裡尋找資料。
 
 ![](http://yixiang8780.com/outImg/20161223-2.png)
 
@@ -19,7 +19,7 @@
 
 ### 片鍵`Shard Keys`
 
-片鍵是啥 ? 它就是當你要進行分片時，你要的`collection`切分的依據，假設我們有下面的資料。
+片鍵是啥 ? 它就是當你要進行分片時，你選定的`collection`切分的依據，假設我們有下面的資料。
 
 ```
 { "name":"mark" , "age" :18}
@@ -35,7 +35,7 @@
 ...
 { "name":"ho","age" : 100}
 ```
-它就有可能會分片成這樣，假設咱們拆分為三片，然後我們指令片鍵為`age`欄位，它就大致上可能會分成這樣，會根據片鍵建立`chunk`，然後再將這堆`chunk`分散到這幾個分片中，`{min~10}`就是一個`chunk`，就是一組`document`。
+它就有可能會分片成這樣，假設咱們拆分為三片，然後我們指定片鍵為`age`欄位，它就大致上可能會分成這樣，會根據片鍵建立`chunk`，然後再將這堆`chunk`分散到這幾個分片中，`{min~10}`就是一個`chunk`，就是一組`document`。
 
 | 分片001      | 分片002         | 分片003  |
 | ------------- |:-------------:| -----:|
@@ -46,7 +46,7 @@
 這邊事實上有很多東西可以思考，例如片鍵的選者或分片設計等，這些主題將留在後面幾篇在來介紹，你之要先大概只知片鍵是啥的就好了。
 
 ## ~分片實作~
-首先咱們先在單機上來建立看看，下一篇會用`docker`來建立，首先一樣先進入`mongodb shell`。
+首先咱們先在單機上來建立看看，一樣先進入`mongodb shell`。
 
 ```
 mongo --nodb
@@ -64,13 +64,13 @@ cluster = new ShardingTest({ "shards" : 3 , "chunksize" :1})
 然後就準備換到另一個`shell`，接下來我們就可以連接到`mongos`囉，根據我們上面的結果可知，我們的`mongos`是建立在`port : 20006`的位置，來連吧~
 
 ```
-db = ( new Mongo("127.0.0.1:20006"))
+db = ( new Mongo("127.0.0.1:20006")).getDB("test")
 ```
 進去以後我們來丟些資料，來測試看看。
 
 ```
 var objs = [];
-for (var i=0;i<5000000;i++){
+for (var i=0;i<1000000;i++){
 	objs.push({"name":"user"+i});
 }
 db.users.insert(objs);
@@ -103,11 +103,11 @@ sh.shardCollection("test.users",{"name":1})
 
 ![](http://yixiang8780.com/outImg/20161223-5.png)
 
-其中可以看到他`shared0000`裡已經將`collection`開拆成很多個`chunk`囉，不過可能是資料量還不夠大，所以目前只用到`shared0000`。
+其中可以看到他`shared0000`裡已經將`collection`開拆成很多個`chunk`囉，不過因為我們`Balancer`的東西還沒啟動，所以還沒分配到其它`shard`，這篇我們下章節在來說說。
 
 ![](http://yixiang8780.com/outImg/20161223-6.png)
 
-然後我們來搜尋看看詳細資訊。
+然後我們來搜尋看看詳細資訊，下圖結果可以知道它去這`shard0000`尋找到`doument`，並且就如同索引一樣，不需要全部掃描來尋找，是的你可以把片鍵想成索引。
 
 ```
 db.users.find({"user889391"}).explain("executionStats")
@@ -115,5 +115,9 @@ db.users.find({"user889391"}).explain("executionStats")
 
 ![](http://yixiang8780.com/outImg/20161223-7.png)
 
+## ~結語~
+本篇文章中，我們學習了分片的基本知識，也簡單的介紹建立分片的方法，但事實上還有很多分片的原理我們沒有完全說到，例如如何分片、片鍵的選擇、`chunk`的拆分，這些我們後面幾篇都會來說明說明。
+
 ## ~參考資料~
 * [https://docs.mongodb.com/v3.2/sharding/](https://docs.mongodb.com/v3.2/sharding/)
+* [http://blog.fens.me/mongodb-shard/](http://blog.fens.me/mongodb-shard/)

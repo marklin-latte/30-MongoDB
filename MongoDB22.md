@@ -1,4 +1,4 @@
-## 30-22 使用Docker建立MongoDB Cluster
+## 30-22之MongoDB的副本集 replica set(2)---使用Docker建立MongoDB Cluster
 上篇文章我們已經說明完，如何在本機上建立mongodb副本集，而本篇文章，我們將要實際的使用docker來建立有三個節點的副本集，也就是所謂`cluster`。
 
 * 開始前的準備
@@ -6,7 +6,7 @@
 * fight ! 
 
 ## ~開始前的準備~
-首先再開始之前你當然要先將`docker`裝好，可以參考下面這章，但你的`docker compose`那邊可以不用做到，因為我還沒研究出，如何用`docker compose`來建立`cluster`。
+首先再開始之前你當然要先將`docker`裝好，可以參考下面這章，但你的`docker compose`那邊可以不用做到，因為我還沒研究出，如何用`docker compose`來建立`cluster`……QQ。
 
 > [30-2之使用Docker來建構MongoDB環境](http://ithelp.ithome.com.tw/articles/10184657)
 
