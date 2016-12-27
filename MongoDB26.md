@@ -1,10 +1,10 @@
 # 30-26之運用研究---股價應用模擬(1)
-前面幾篇文章我們說明完了分片的運用後，我們接下來，就來實際的模擬個情景，來進行實際上如果我們要完成這種情況，要如何的一步一步完成，咱們選擇的模擬情境為股價應用，現在`Fintech`幾乎天天在報紙上看到，所以我們就來應景一下，來嘗試這建立看看金融應用。
+前面幾篇文章我們說明完了分片的運用後，我們接下來，就來實際的模擬個情景，我們來學習要如何的一步一步完成，咱們選擇的模擬情境為股價應用，現在`Fintech`幾乎天天在報紙上看到，所以我們就來應景一下，來嘗試這建立看看金融應用。
 
 ## ~ 情景說明 ~
-二哈是一位開發者，但他平常就有在進行投資，大部份都是買買股票，但平常都只是直接卷商的平台看看資料，然後就直接投資囉，但是這貨兒每買必輸每賣必虧，然後有一天他聽到天賴之音說『請分析一下』，然後它就決定走上資料分析一途……這貨真的很二
+二哈是一位二貨，他平常就有在進行投資，大部份都是買買股票，但平常都只是直接卷商的平台看看資料，然後就直接投資囉，但是這貨兒每買必輸每賣必虧，然後有一天他聽到天賴之音說『請分析一下』，然後它就決定走上資料分析一途……這貨真的很二
 
-![]()
+![](http://yixiang8780.com/outImg/20161226-2.jpeg)
 
 回歸主題，二哈的需求只是分析，所以我們再分析前，我們要先建立好資料，通常能分析的資料量是越大越好，所以我們這邊一定會需要用到分片，並且我們先從最基本的股票資料k線與成交量來建立資料，首先我們的資料結構應該如下。
 
@@ -21,7 +21,7 @@
 ```
 然後我們來正試開始吧。
 
-### Step 1. 架構分析
+## ~ Step 1. 架構分析 ~
 
 ### 索引架構思考
 首先我們根據以上的資料結構可知，我們該主題目前不太需要考慮到正規化與反正規化的問題，那接下來我們來思考看看**索引**的問題，但那蠢二哈只想到分析但不知道分析啥，我們來幫他想想。
@@ -71,8 +71,8 @@
 
 根據以上種種原因，我們先暫定分片為`code`，除非後來有根據可以換別的。
 
-### 建立模擬資料
-首先一樣看看我們的`pack.json`，我們一樣需要使用`mongodb`而另一個需要使用的`randgen`，我要用它產生出常態分配股價。
+## ~ Step 2. 建立模擬資料 ~
+首先一樣看看我們的`pack.json`，我們一樣需要使用`mongodb`而另一個需要使用的`randgen`，我要用它產生出常態分配股價，這邊是[全部的程式碼](https://github.com/h091237557/30-MongoDB/blob/master/Test/30-26/test.js)。
 
 ```
 {
@@ -92,5 +92,131 @@
 }
 
 ```
+我們這邊簡單說一下常態分配產生股價的方法，常態分配是統計學上，用來描述某些群體的機率分配，我們來看看下面這張圖，圖片來自於`wiki`。
+
+![](http://yixiang8780.com/outImg/20161226-1.png)
+
+上面這張圖主要就是說某些群體，它的值會有`６８％`在深藍的範圍內，也就是所謂的一個標準差內，而有`９５％`的機率是會在二個標準差以內。
+
+然後我們看一下，我們上面使用的`lib``randgen`來看看他的用法。
+
+```
+num = rnorm(2, 5);
+```
+第一個參數為平均數，第二個參數為標準差，也就是說它有68%的機率，`num`會座落在`2-5 ~ 2+5 `之間也就是`-3~7`之間，而有95％的機率會落在`2-5*2 ~ 2+5*2`也就是`-8~12`之間。
+
+上面大概說明完常態分配後，我們接下來就可以來看一下我們模擬股價的程式碼，不算太難，其中該方法的第一個參數為你想模擬幾天的資料，而第二個參數是上一個股標的結果，代入繼續丟資料進這個陣列中，這樣我們比較好丟到`mongodb`中。
+
+然後我來說一下幾個值，首先是`price`，它是每天要用常態時的平均數，我們只有在第一天時會先隨機產生個價格，然後接下來的每天我們的`price`會改用前一天的收盤價，然後再用它來產生出當天的其它價格。而至於`sd`就是標準差，我們乘上`0.07`是因為台股`７%`限制，然後在除`3`是因為三個標準差以常態分配來看是`99.9%`，也就是說我這個模擬股價只有`0.1%`的情況下才會超過`7%`上限，這只是模擬～～～ 
+
+```
+//　用來建立單筆多天的股價資料
+function createStockDatas(count, result) {
+  var randPrice = randNum(10, 1000);
+	var code = randCode();
+  var date = new Date(),
+    temp;
+
+  for (var i = 0; i < count; i++) {
+    var price = temp || randPrice,
+      sd = price * 0.07 / 3,
+      open = Math.floor(rnorm(price, sd)),
+      low = Math.floor(rnorm(price, sd)),
+      heigh = randHeigh(open, price, sd),
+			close = Math.floor(rnorm(price,sd)),
+		 	volume = randNum(1000, 100000);
+
+    result.push({
+      "code": code,
+      "date": date.setDate(date.getDate() + i),
+      "open": open,
+      "heigh": heigh,
+      "close": close, 
+      "low": low,
+      "volume": volume
+    })
+    temp = low;
+  }
+  return result
+}
+
+// 產生常態分配的最高價，但最高價不能小於開盤價。
+function randHeigh(open, avg, sd) {
+  var result = 0;
+  while (result <= open) {
+    result = rnorm(avg, sd);
+  }
+  return Math.floor(result);
+}
+
+// 產生常態分配的最底價，但最低價不能大於最高價。
+function randlow(heigh, avg, sd) {
+  var result = 0;
+  while (result == 0 || result >= heigh) {
+    result = rnorm(avg, sd);
+  }
+  return Math.floor(result);
+}
+
+// 產生亂數 min ~ max 範圍。
+function randNum(min, max) {
+  return Math.floor((Math.random() * max) + min);
+}
+
+// 隨機產生股價代碼。
+function randCode() {
+  return randNum(1, 9).toString() + randNum(0, 9).toString() + randNum(0, 9).toString() + randNum(0, 9).toString()
+}
+```
+建立好個股模擬多天的方法後，我們就可以模擬多筆多天的資料新增的`mongos`裡囉，注意我們的`port`要用`20006`。
+
+```
+var mongodb = require('mongodb');
+var rnorm = require('randgen').rnorm;
+
+var mongodbServer = new mongodb.Server('localhost', 20006, {
+  auto_reconnect: true,
+  poolSize: 10
+});
+
+var db = new mongodb.Db('test', mongodbServer);
+var stockCount = 1000;
+var days = 3600;
+
+
+// 執行新增至mongodb動作。
+db.open(function() {
+	db.collection('stocks', function(err, collection) {
+		var datas = testDatas(stockCount, days);
+		collection.insert(datas, function(err, res) {
+			if (res) {
+				console.log(res);
+			} else {}
+		});
+	});
+});
+
+// 用來建立模擬資料
+function testDatas(stockCount, days) {
+  var result = [];
+  for (var i = 0; i < stockCount; i++) {
+    result = createStockDatas(days, result);
+  }
+	return result;
+}
+```
+然後我們這個測試準備打算建立`10000`筆股票，然後模擬天數為`5000`，基本上總共有5000千多萬筆資料。
+
+fight ~~~
+
+別忘了開掛。
+
+```
+node --max-old-space-size=8192 test.js 
+```
+今天先到這囉。
+
+## ~ 結語 ~
+本篇文章中，我們說明了我們這個應用的架構設計，已經索引與分片的架構，下一篇文章我們將會說明二哈這貨的使用說明。
 
 
