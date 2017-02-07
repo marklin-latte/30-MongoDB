@@ -1,10 +1,14 @@
-# 30-8之CRUD的搜尋(1)…`find`與`搜尋條件`
+ # 30-8之新手村CRUD---搜尋之find與搜尋操作符號
 
-本篇文章將要說明`find`，以及各種條件式的搜尋使用。
+前面幾篇已經說明完了新增、修改、刪除，最後咱們新手村之旅的尾巴將要說明搜尋，這個功能應該是我們最常會使用到的，請好好的學習。
+
+* `find`方法基本說明 
+* `find`的搜尋條件(含搜尋故事)
 
 P.S `+u^8`~
 
-## `find`基本說明
+## `find`方法基本說明
+---
 `mongodb`使用`find`來進行搜尋，它的第一個參數決定要那些資料，而第二個參數則決定要返回那些`key`。
 
 基本的使用範例如下，首先我們先建立一些資料。
@@ -14,14 +18,12 @@ db.user.insert({"name":"mark","id":"1","age":20});
 db.user.insert({"name":"steven","id":"2","age":20});
 db.user.insert({"name":"jj","id":"3","age":25});
 db.user.insert({"name":"bb","id":"4","age":20});
-
 ```
 
 我們想尋找到`name`為`mark`的`document`，並且我們希望回傳值只回傳`id`這個`key`就好，搜尋指令如下。
 
 ```
 db.user.find({"name":"mark"},{"id" :1 })
-
 ```
 
 ![](http://yixiang8780.com/outImg/20161206-1.png)
@@ -34,28 +36,29 @@ db.user.find({"name":"mark"},{"id" : 1,"_id":0})
 
 ![](http://yixiang8780.com/outImg/20161206-2.png)
 
-## `find`的搜尋條件~
+## ~ `find`的搜尋條件 ~
+---
 這邊我們將要說明`find`常用搜尋條件，and、or、大於等於、大於、小於、小於等於、包含、不包含，有了這些條件我們就可以更方便的尋找你所需要的`document`。
 
 這邊簡單的整理成一張表來對應操作符號。
 
 | 條件        | 操作符號           | 
-| ------------- |:-------------:| 
-| AND      | `$and`，另一種方法也可以直接在`query`中下`{"key1","value1","key2":"value2"}`| 
-| OR      | `$or`      |   
+| ------------- |:-------------:|
+| AND      | `$and`，另一種方法也可以直接在`query`中下`{"key1","value1","key2":"value2"}`|
+| OR      | `$or`      |
 | NOT      | `$not`      |
 | NOR      | `$nor`      |
-| 大於 | `$gt`      |   
-| 大於等於      | `$gte`      |   
-| 小於 | `$lt`      |    
-| 小於等於      | `$lte`      |  
-| 包含 | `$in`      |    
-| 不包含      | `$nin`      |    
+| 大於 | `$gt`      |
+| 大於等於      | `$gte`      |
+| 小於 | `$lt`      |
+| 小於等於      | `$lte`      |
+| 包含 | `$in`      |
+| 不包含      | `$nin`      |
 
 
-我們接下來會先產生幾筆測試資料，然後再來測試幾個搜尋故事。
+我們接下來會先產生幾筆測試資料，再來測試幾個搜尋故事。
 
-測試資料如下。
+測試資料如下，這是一組使用者資訊，裡面記載了使用者的名稱、年紀、粉絲數以及喜歡數。
 
 ```
 //collection為user
@@ -67,7 +70,6 @@ db.user.find({"name":"mark"},{"id" : 1,"_id":0})
 {"id":"5","name":"jack","age":30,"fans":130,"likes" : 1300}
 {"id":"6","name":"crisis","age":30,"fans":130,"likes" : 100}
 {"id":"7","name":"landry","age":25,"fans":130,"likes" : 100}
-
 ```
 
 ### 我想要尋找年紀30歲以上(包含30)，但不滿60歲(不包含60)，fans又有200人以上(包含200)的人
@@ -83,8 +85,8 @@ db.user.find(
 //這是第二種
 db.user.find(
 	{"$and":[{"age":{"$gte":30,"$lt":60}},{"fans":{"$gte" : 200}}]})
-
 ```
+
 結果如下，應該只找到`steven`這位仁兄。
 
 ![](http://yixiang8780.com/outImg/20161206-3.png)
@@ -151,18 +153,19 @@ db.user.find({"$nor":[{"fans":{"$lt":100}},{"likes":{"$lt":100}}]})
 ```
 ![](http://yixiang8780.com/outImg/20161206-8.png)
 
-## 結語
+## ~ 結語 ~
+---
 今天說明了很多的條件符號，可以簡單分成以以下兩類，邏輯符號與比較符號，運用這兩種符號就可以針對很多種情況下進行搜尋，當然還不只這些，明天將會繼續，我累了……。
 
 |         | 操作符號           | 
 | ------------- |:-------------:| 
-| 邏輯符號      | `$and`、`$or`、`$or`、`not`| 
-| 邏輯符號用法      | `{$xxx: [ { expression1 },{ expression2 }]}` `{ field: { $not: { <operator-expression> } } }`| 
-| 比較符號      | `$gt`、`$gte`、`$lt`、`$lte`、`$in``$nin`      |   
-| 比較符號用法      | `{field: {$gt: value} } ` `{ field: { $in($nin): [<value1>, <value2>, ... <valueN> ] } }`     | 
+| 邏輯符號      | `$and`、`$or`、`$or`、`not`|
+| 邏輯符號用法      | `{$xxx: [ { expression1 },{ expression2 }]}` `{ field: { $not: { <operator-expression> } } }`|
+| 比較符號      | `$gt`、`$gte`、`$lt`、`$lte`、`$in``$nin`      |
+| 比較符號用法      | `{field: {$gt: value} } ` `{ field: { $in($nin): [<value1>, <value2>, ... <valueN> ] } }`     |
 
- ## 參考資料
- 
+ ## ~ 參考資料 ~
+ ---
  * [https://docs.mongodb.com/v3.0/reference/operator/query-geospatial/](https://docs.mongodb.com/v3.0/reference/operator/query-geospatial/)
  * [http://www.cnblogs.com/egger/p/3135847.html](http://www.cnblogs.com/egger/p/3135847.html)
  

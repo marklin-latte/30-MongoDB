@@ -1,11 +1,14 @@
-# 30-4之CRUD的Bulk與新增效能測試…喔
+# 30-4之新手村CRUD---新增之Bulk與新增效能測試
 
-本篇文章運用上一篇提到的二種新增方法`insert`、`insertMany`，以及另一種新增方法`Bulk`來做執行速度比較，由於`insertMany`在`mongodb shell`執行完會直接輸出結果，所以如果有1萬筆資料他就會一直跑一直跑……跑到天荒地老，看不到我用來計算執行時間的方法，所以本測試打算用`node js`來建立測試方法。
+本篇文章會運用上一篇提到的二種新增方法`insert`、`insertMany`，以及另一種新增方法`Bulk`來做執行速度比較 ; 由於`insertMany`在`mongodb shell`執行完會直接輸出結果，所以如果有1萬筆資料他就會一直跑一直跑……跑到天荒地老，看不到我用來計算執行時間的方法，所以本測試打算用`node js`來建立測試方法。
 
 在開始測試之前，先介紹一下另一個新增方法`Bulk Insert`。
 
-## Bulk Insert
+* `Bulk Insert` 方法
+* 新增方法的效能測試
 
+## ~ `Bulk Insert`方法 ~
+---
 `Bulk Insert`在`2.6`版時發佈，它也是種新增方法，效能如何等等會比較，基本使用方法有分有兩`Unordered Operations`和`Ordered Operations`。
 
 ### Ordered Operations
@@ -33,9 +36,12 @@ bulk.insert( { name: "hoho"} );
 bulk.execute();
 ```
 
+> `Ordered` 與 `Unordered`我們在要如何選擇使用時機呢，記好只要有相關性的操作就要選擇用`Ordered`，而如果像是`log`之類的，流失一兩筆也是沒差，這時可以選用`Unordered`。
 
-## 建立測試環境
+## ~ 新增方法的效能測試 ~
+---
 
+### 建立測試環境
 首先我們先建立個新的資料夾，然後在裡面執行`npm init`來產生`package.json`檔，最後我們需要的元件為`mongodb`，這是`mongodb native driver`，透過`npm install mongodb --save`來進行安裝。
 
 接下來我們建立測試檔案`test.js`，內容如下，並附上[github](https://github.com/h091237557/30-MongoDB/tree/master/Test/30-4)連結。
@@ -140,13 +146,9 @@ db.open(function() {
 
   });
 });
-       
 ```
 
-## 開始測試案例
-
-
-
+### 開始測試案例
 測試物件大小約為`38Bytes`，並且從小測到大，這邊要注意一下，由於`mongodb`會進行所謂的預分配，將空間換取穩定，每當你第一次建立`document`，他就會切分固定大小給你，然後你就算刪除`document`時空間還是會存在，所以如果你先執行一次10萬筆測試，在執行第二次十萬筆測試時，你會發現執行速度變快了，因為它不用在預分配了。
 
 
@@ -156,8 +158,8 @@ db.open(function() {
    "age": "20",
    "size": "1"
 }
-
 ```
+
 執行結果如下，每筆數測試都會執行兩次，並且不同筆數測試會先將預分配空間完全清除。
 
 從下面執行結果可以知道幾點事情。
@@ -184,9 +186,13 @@ db.open(function() {
 
 ![](http://yixiang8780.com/outImg/20161201-1.png)
 
+P.S 後來有找到可以使用下面這句，來將`node`記憶體限制增加。
 
-
-## 結語
+```
+node --max-old-space-size=8192 xxxx.js 
+```
+## ~ 結語 ~
+---
 測試出來的結果是，如果需要回傳值和錯誤詳細回傳資料的話，請選擇用`InsertMany`，
 而如果是要新增例如`log`之類的可以用`Unordered Bulk`，因為掉一筆也不一定會死，
 但如果是掉一筆會死的請用`Ordered Bulk`。
@@ -195,9 +201,8 @@ db.open(function() {
 
 P.S 今日出來是`Bob`。
 
-
-## 參考資料
-
+## ~ 參考資料 ~
+---
 * [https://docs.mongodb.com/v3.2/reference/method/db.collection.insert/](https://docs.mongodb.com/v3.2/reference/method/db.collection.insert/)
 * [https://docs.mongodb.com/v3.2/reference/method/js-bulk/](https://docs.mongodb.com/v3.2/reference/method/js-bulk/)
 * [https://docs.mongodb.com/v3.2/reference/method/Bulk.insert/](https://docs.mongodb.com/v3.2/reference/method/Bulk.insert/)

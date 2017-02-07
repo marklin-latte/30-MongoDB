@@ -2,8 +2,8 @@
 
 由於網站上已經有很多`mongodb`的安裝方法，所以本篇將說明，如何使用`Docker`來建立`可使用mongodb的環境`，這也代表你的電腦只要有安裝`docker`，都可以使用`mongodb`，不再需要去找各種東西的安裝方法。
 
-## 安裝`Docker`
-
+## ~ Step1. 安裝`Docker` ~
+---
 ### Mac安裝
 [https://docs.docker.com/docker-for-mac/](https://docs.docker.com/docker-for-mac/)
 
@@ -25,8 +25,8 @@
 
 請參考這篇安裝。
 
-## 建立`docker-compose.yml`
-
+## ~ Step2. 建立`docker-compose.yml` ~ 
+---
 在某個檔案夾下建立`docker-compose.yml`，並且內容如下，然後在執行`docker-compose up`指令，它就自動幫你建立一個裝有`mongodb`的環境。
 
 ```
@@ -49,8 +49,8 @@ services:
 
 ![Alt text](http://yixiang8780.com/outImg/20161129-1.png)
 
-## 進入Docker Container裡操作MongoDB
-
+## ~ Step3. 進入Docker Container裡操作MongoDB ~
+---
 在執行完`docker-compose up`後，換到另一個`shell`，然後你可以執行`docker ps`指令來確定有`mongodb`的`container`有沒有執行，你可以把`container`想成為一個很小的`VM`。
 
 從下圖可知，執行`docker ps`後可看到你這台電腦有在執行的`container`，其中`mongo`就是我們剛剛執行的。
@@ -66,13 +66,14 @@ services:
 ![Alt text](http://yixiang8780.com/outImg/20161129-4.png)
 
 
-## 結語
+## ~ 結語 ~
+---
 `docker`如果學會真的是很方便，如果是在`team`中，有新人來，不在需要和他說要安裝啥、安裝啥、然後卡到大喊學長救我，學長事實上會有點……，除非人真的很好，又或是他對你有意思。
 
 各位`+u^2`。
 
-## 參考資料
-
+## ~ 參考資料 ~
+---
 [https://joshhu.gitbooks.io/dockercommands/content/Containers/IntoContainers.html](https://joshhu.gitbooks.io/dockercommands/content/Containers/IntoContainers.html)
 
 

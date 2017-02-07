@@ -1,10 +1,13 @@
-# 30-7之CRUD的刪除…喔
+# 30-7之新手村CRUD---刪除
 
-本篇文章將要來說明`mongodb`的刪除方法，`rmoeve、deleteOne、deleteMany`。
+本篇文章將要來說明`MongoDB`的刪除方法，`rmoeve、deleteOne、deleteMany、bulk`，並且簡單的比較一下速有有何差別。
 
-P.S 好像開始有點累的fu了…
+* `MongoDB`的刪除方法
+* 比較一下速度
 
-## `remove`
+## ~ `MongoDB`的刪除方法 ~
+---
+### `remove`
 `remove`方法是`mongodb`裡最基本的刪除`document`的方法，但這邊要注意就算你刪除了
 `document`它的`index`與`預分配空間`都不會刪除。
 
@@ -33,11 +36,9 @@ db.user.insert({"name":"steven","age":23});
 db.user.insert({"name":"jj","age":23});
 
 db.user.remove({"name":"steven"})
-
 ```
 
-
-### 刪除所有資料
+#### 刪除所有資料
 `remove`可以用來刪除`collection`的所有資料，但還有另一種方法也是刪除`collection`的所有資料，那就是`drop`，但它同時會將`index`給全部刪除。
 
 兩種的使用方法如下。
@@ -46,10 +47,10 @@ db.user.remove({"name":"steven"})
 db.user.remove({})
 
 db.user.drop()
-
 ```
 
-## `deleteMany`與`deleteOne`
+### `deleteMany`與`deleteOne`
+
 `deleteMany`與`deleteOne`也是刪除的方法一種，就一個是刪除多筆和一個是單筆，和`remove`不同點大概只差在回傳值上，至於速度上等等來trytry看。
 
 使用兩種方法的參數如下，與`remove`也大至差不多。
@@ -72,10 +73,10 @@ db.user.insert({"name":"jj","age":23});
 
 db.user.deleteMany({"name":"steven"})
 db.user.deleteOne({"name":"jj"})
-
 ```
 
-## `bulk delete`
+### `bulk delete`
+
 `bulk`操作故明思意就是要來衝一下大筆資料刪除的效能方法。
 
 使用方法如下。
@@ -91,10 +92,10 @@ bulk.execute();
 var bulk = db.collection.initializeUnorderedBulkOp();
 bulk.find( { "name": "mark" } ).remove();
 bulk.execute();
-
 ```
 
-## 來比較一下速度
+## ~ 來比較一下速度 ~
+---
 事實上用到現在有時會在想為什麼`mongodb`一個刪除文檔，要同時推出三個方法(新增也是)，這到現在還是有點無解，而且`remove`在`nodejs drivers`已經被`Deprecated`([這邊](http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#remove))，扣憐……，他建議改用`deleteMany`。
 
 也因為上述原因這次測試就跳過`remove`了(真的扣憐)，因為我們要用`nodejs drivers`。
@@ -178,11 +179,13 @@ db.open(function() {
 | 100000 | 1100ms      |    963ms |
 | 1000000 | 11131ms      |    100470ms |
 
-## 結語
+## ~ 結語 ~
+---
 說實話不確定是不是我的測試方法問題(應該是沒有)，雖然`bulk`預期的是跑的比`deleteMany`還快，但
 是並沒有到很快，這邊又會讓人想思考為什麼一個刪除`document`當初會有分這幾種方法?只是因為回傳值的不同????希望這30天可以不小心的找出答案……希望……(stackoverflow都找不到答案……)
 
-## 參考資料
+## ~ 參考資料 ~
+---
 * [http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#remove](http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#remove)
 * [http://stackoverflow.com/questions/35691647/whats-the-difference-between-deletemany-and-remove-in-mongodb](http://stackoverflow.com/questions/35691647/whats-the-difference-between-deletemany-and-remove-in-mongodb)
 * [https://docs.mongodb.com/v3.2/reference/method/db.collection.deleteMany/](https://docs.mongodb.com/v3.2/reference/method/db.collection.deleteMany/)

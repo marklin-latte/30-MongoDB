@@ -1,10 +1,13 @@
-# 30-3 (CRUD) 新增…喔
+# 30-3之新手村CRUD---新增
 
-本篇主要說明如何用`Insert`、`InsertOne`、`InsertMany`這三個函數來新增`document`至`mongodb`，並說明這三種有何不同，而至於效能部份請看下篇~
+安裝好`MongoDB`後，接下來本篇主要說明如何新增資料至`MongoDB`中，而用更精確的詞彙來說是，如何新增`document`至`collection`中。這邊我們會說明以下幾種`MongoDB`所的方法，來建立資料, 並說明這三種有何不同，而至於效能部份請看下篇~
 
+* `Insert`
+* `InsertOne`
+* `InsertMany`
 
-## Insert
-
+## ~ `Insert`方法 ~
+---
 ### 單筆資料Insert
 
 `insert`函數可以將一個`document`建立到`collection`裡，我們這裡建立一個簡單的範例來看如何使用`insert`。
@@ -62,8 +65,6 @@ for (var i=0;i<count;i++){
 }
 
 db.user.insert(users,{ordered:false})
-
-
 ```
 
 結果如下圖。
@@ -71,7 +72,8 @@ db.user.insert(users,{ordered:false})
 ![](http://yixiang8780.com/outImg/20161130-3.png)
 
 
-## InsertOne
+## ~ `InsertOne`方法 ~
+---
 `InsertOne`函數事實上用法和`insert`差不多，只有兩點不同，首先是回傳，`insertOne`會回傳你所建立的`document`的`ObjectId`，`ObjectId`是系統自動生成的，是唯一值，而第二點不同就如同它的名字，他只能一次新增一筆。
 
 我們來試試下列範例。
@@ -84,13 +86,14 @@ user1 = {
 }
 
 db.user.insertOne(user1);
-
 ```
+
 從結果可以看到他回傳了該筆資料的`ObjectId`。
 
 ![](http://yixiang8780.com/outImg/20161130-2.png)
 
-## InsertMany()
+## ~ `InsertMany`方法 ~
+---
 InsertMany函數是`mongodb 3.2`版時新增的，用法也和`insert`函數差不多，但比較不同的是他的回傳值如下，他會回傳所有所建立的`documnet`的`ObjectId`。
 
 ```
@@ -102,13 +105,11 @@ InsertMany函數是`mongodb 3.2`版時新增的，用法也和`insert`函數差�
       ObjectId("562a94d381cb9f1cd6eb0e1c")
    ]
 }
-
 ```
+
 以下為範例，來看看他的使用方法。
 
-
 ```
-
 var user1 = {
 	name : "Mark",
 	age : 18,
@@ -124,19 +125,20 @@ for (var i=0;i<count;i++){
 db.user.insertMany(users,{ordered:false})
 
 ```
+
 執行過程與結果如下。
 
 ![](http://yixiang8780.com/outImg/20161130-4.png)
 
-
-## 結語
+## ~ 結語 ~
+---
 這三種方法事實上用法大同小異，有時只差在回傳值，如果需要回傳`ObjectId`的話就用`insertMany`或`insertOne`，不需要的話就用`insert`就行了，對了還有這三個方法如果要新增到的`collection`不存在的話會自動幫你建立，至於速度方法我們將於下一篇做比較。
 
 P.S 不要愛上我的Kevin ~ 
 
 
-## 參考資料
-
+## ~ 參考資料 ~
+---
 * [http://stackoverflow.com/questions/36792649/whats-the-difference-between-insert-insertone-and-insertmany-method](http://stackoverflow.com/questions/36792649/whats-the-difference-between-insert-insertone-and-insertmany-method)
 * [https://docs.mongodb.com/v3.2/reference/method/db.collection.insertOne/](https://docs.mongodb.com/v3.2/reference/method/db.collection.insertOne/)
 * [https://docs.mongodb.com/v3.0/reference/write-concern/](https://docs.mongodb.com/v3.0/reference/write-concern/)
