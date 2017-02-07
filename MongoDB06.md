@@ -7,7 +7,7 @@
 呼好多……
 
 ## ~ 陣列更新修改器攻略 ~
----
+
 ### `$push`
 
 `$push`是陣列修改器，假如一個`document`中已經有陣列的結構，使用`push`會在陣列的尾末加入一個新元素，要是本來就沒有這個陣列，則會自動新建一筆。
@@ -134,7 +134,7 @@
 ![](http://yixiang8780.com/outImg/20161204-6.png)
 
 ## ~ 結語 ~
----
+
 今天說了不少個修改器簡單的進行總結一下。
 
 * 要將元素丟進陣列時可用`$push`。
@@ -146,5 +146,5 @@
 結束……又快要燒起來的`fu`，`+u^6`。
  
 ## ~ 參考資料 ~
----
+
 * [https://docs.mongodb.com/v3.2/reference/operator/update-array/](https://docs.mongodb.com/v3.2/reference/operator/update-array/)
