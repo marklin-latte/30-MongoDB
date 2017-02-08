@@ -6,7 +6,7 @@
 * 該選用那個方法呢 ? 
 
 
-## ~正規化~
+## ~ 正規化 ~
 在開始討論`mongodb`架構時，有個東西要先講講，那就是『正規化』與『反正規化』，有使用過資料庫的應該都有聽過這名詞，不過這邊還是來解釋解釋，順到回憶一下。
 
 首先什麼是正規化呢 ? 根據`wiki`的定義。
@@ -99,9 +99,9 @@
 |5| 003      | 20160103 | 34 |10|340|
 |6| 003      |  20160103 | -10 |20|-200|
 
-## `MongoDB`中的正規化與反正規化
+##  MongoDB 中的正規化與反正規化
 
-### `Mongodb`正規化範例
+###  Mongodb 正規化範例
 上面的章節中我們已經大致上了解正規化是什麼意思，這邊再簡單的用`mongodb`的結構來複習一次，正規化就是將資料分散到多個不同的`collection`，不同`collection`之間可以相互引用資料，所以找資料時，只要`join`(在關聯式時)就好，但`mongodb`沒`join`……，只能多次搜尋了。
 
 下面運用簡單的交易資訊來建立`mongodb`正規化的結構。
@@ -140,7 +140,7 @@ db.user.udpate({"name" : "mark"},{"$set" : { "age" : 18} })
 
 ```
 
-### `Mongodb`反正規化範例
+### MongoDB 反正規化範例
 
 而反正規化則相反，將每個`document`中所需要資料都建立成子文件形式，如果有資料要更新，那麼所有的`document`都需要進行更新，但在搜尋時，只需要尋找一次，就可以得到所有數據，理論上來說應該是比正規化速度還快。
 
@@ -199,12 +199,12 @@ db.trades.find({ "tradeId" : 1})
 * 資料一致性 : 也就是說反正規化可能會發生某筆交易單的交易人`mark`的年紀和另一筆交易單的`mark`年紀不一致的狀況，因為還沒全部更新完，就有人搜尋了。
 * 資料增加幅度 : 似乎與第一項子文檔大小相似的原理。
 
-## ~結語~
+## ~ 結語 ~
 本篇文章簡單的說明完正規化與反正規化的問題，基本上要選擇用那種來設計你的`MongoDB`，還是要看看你的需求才能決定，如果真的難以決定，只要記好一個原則，依使用率最高的功能來進行設計，嗯……個人的想法。
 
 `P.S` 又快`g`的感覺 ~ 各位`+u^17` ~  
 
-## ~參考資料~
+## ~ 參考資料 ~
 
 * [https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-1](https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design-part-1)
 * [https://blog.toright.com/posts/4483/mongodb-schema-%E8%A8%AD%E8%A8%88%E6%8C%87%E5%8D%97.html](https://blog.toright.com/posts/4483/mongodb-schema-%E8%A8%AD%E8%A8%88%E6%8C%87%E5%8D%97.html)
