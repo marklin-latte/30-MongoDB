@@ -12,7 +12,7 @@
 > 
 > `MapReduce`性能較差，但可提供更複雜的聚合功能。
 
-## ~`Mongodb`的`MapReduce`使用~
+## ~ Mongodb 的 MapReduce 使用~
 `mongodb`中的`MapReduce`使用的方法如下。
 
 ```
@@ -42,7 +42,7 @@ db.collection.mapReduce(
 | `finalize` |  可以將`reduce`的結果，丟給某個`key`。     |
 | `scope`      | 可以在js中使用變數。      |
 
-### 實際應用1 ~ 根據`class`分組計算每組訂單收入
+### 實際應用1 ~ 根據 class 分組計算每組訂單收入
 是的，這個例子我們在`aggregate framework`時有用過，事實上這種簡單的例子用`MapReduce`來解決，有點用到牛刀了，不過我們只是要看看如何使用，所以就不用在意太多囉。
 
 先看看我們有的資料。
@@ -94,7 +94,7 @@ result.find()
 { "_id" : "2", "value" : 5600 }
 ```
 
-### 實際應用2 ~ 根據`class`進行分組，並且我們只想知道`2`與`3`的總收入，並且加上`dollar`單位。
+### 實際應用2 ~ 根據 class 進行分組，並且我們只想知道 2 與 3 的總收入，並且加上 dollar 單位。
 
 這個應用事實上有不少做法，這裡我們的作法是先用`query`篩選出`2`與`3`，然後在來計算它們的總收入，最後在用`finalize `來加上`dollar`。
 
