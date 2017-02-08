@@ -34,7 +34,7 @@
 ## ~ MongoDB 不支援事務 ~
 對`mongodb`不支援事務，但它還是有支援一些符合各別特性的操作，總共有三個。
 
-### 1. 在單個`document`上有提供原子性操作`findAndModify `
+### 1. 在單個 document 上有提供原子性操作 findAndModify 
 
 `mongodb`有提供單個`document`，操作，也就是說如果你要針對該`document`進行更新，要麼全部更新完成，不然就全部不更新，我們簡單用個範例來說明如何設計成，符合原子性的功能。
 
@@ -76,7 +76,7 @@ db.accounts.findAndModify({
 })
 ```
 
-### 2. 對多個`document`使用`$isolate`
+### 2. 對多個 document 使用 $isolate
 `mongodb`還有提供一個東東，它可以讓你在更新大量`document`時，其它的線程無法針對這些更新的文檔進行讀與寫，也就是支援隔離性（Isolation）。
 
 但當然它也是有缺點的，有以下三個缺點。
@@ -85,7 +85,7 @@ db.accounts.findAndModify({
 * 他沒有支援原子性的功能，也就是你更新完一半囉，但發生錯誤了，你已經更新好的不會回復成原始狀態。
 * 它不支援分片。
 
-### 3. `Two Phase Commits`來模擬事務操作
+### 3. Two Phase Commits 來模擬事務操作
 `mongodb`官方，有提供一種範例方法，讓我們手動的來建立事務操作，它可以讓我們在進行大量更新時，如果發生錯誤，則之前更新的會全部還原，這種方法就叫`Two Phase Commits`。
 
 我們直接拿官方的例子來說明，假設有兩個銀行帳號。
@@ -96,7 +96,7 @@ db.accounts.save({name:"B", balance:1000, pendingTransactions: []})
 ```
 然後我們這時要將帳號`A`轉帳`100元`到帳處`B`，我們這邊將用`two phase commits`來一步一步的完成這筆交易
 
-#### Step 1. 設定事務初始狀態為`initial`
+#### Step 1. 設定事務初始狀態為 initial
 
 首先我們會在一個新的`collection`名為`transaction`新增一筆資料，記錄這該筆事務的資訊，並且設定`state`為`initial`。
 
@@ -106,7 +106,7 @@ db.transactions.save(
 )
 ```
 
-#### Step 2. 開始修改`accounts`前，先修改初始狀態為`Pending `
+#### Step 2. 開始修改 accounts 前，先修改初始狀態為 Pending 
 
 首先先尋找出狀態為`inital`的事務。
 
@@ -166,7 +166,7 @@ db.accounts.update({name:t.destination,
     "pendingTransactions" :[ ObjectId("4d7bc7a8b8a04f5126961522") ] }
 ```
 
-#### Step 4. 設置事務狀態為`committed `
+#### Step 4. 設置事務狀態為 committed 
 
 ```
 db.transactions.update({_id:t._id},{$set:{state:"committed"}})
@@ -213,7 +213,7 @@ db.transactions.update({_id:t._id},{$set:{state:"done"}})
 
 我們只直接用如果已經更新帳戶內的`balance`後發生錯誤要著麼進行回復。
 
-#### Step 1. 設置事務狀態為`canceling `
+#### Step 1. 設置事務狀態為 canceling 
 
 ```
 db.transactions.update({_id:t._id},{$set:{state:"canceling"}})
