@@ -5,9 +5,9 @@
 * `MongoDB`的刪除方法
 * 比較一下速度
 
-## ~ `MongoDB`的刪除方法 ~
----
-### `remove`
+## ~ MongoDB的刪除方法 ~
+
+### remove
 `remove`方法是`mongodb`裡最基本的刪除`document`的方法，但這邊要注意就算你刪除了
 `document`它的`index`與`預分配空間`都不會刪除。
 
@@ -49,7 +49,7 @@ db.user.remove({})
 db.user.drop()
 ```
 
-### `deleteMany`與`deleteOne`
+### deleteMany與deleteOne
 
 `deleteMany`與`deleteOne`也是刪除的方法一種，就一個是刪除多筆和一個是單筆，和`remove`不同點大概只差在回傳值上，至於速度上等等來trytry看。
 
@@ -95,7 +95,7 @@ bulk.execute();
 ```
 
 ## ~ 來比較一下速度 ~
----
+
 事實上用到現在有時會在想為什麼`mongodb`一個刪除文檔，要同時推出三個方法(新增也是)，這到現在還是有點無解，而且`remove`在`nodejs drivers`已經被`Deprecated`([這邊](http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#remove))，扣憐……，他建議改用`deleteMany`。
 
 也因為上述原因這次測試就跳過`remove`了(真的扣憐)，因為我們要用`nodejs drivers`。
@@ -180,12 +180,12 @@ db.open(function() {
 | 1000000 | 11131ms      |    100470ms |
 
 ## ~ 結語 ~
----
+
 說實話不確定是不是我的測試方法問題(應該是沒有)，雖然`bulk`預期的是跑的比`deleteMany`還快，但
 是並沒有到很快，這邊又會讓人想思考為什麼一個刪除`document`當初會有分這幾種方法?只是因為回傳值的不同????希望這30天可以不小心的找出答案……希望……(stackoverflow都找不到答案……)
 
 ## ~ 參考資料 ~
----
+
 * [http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#remove](http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#remove)
 * [http://stackoverflow.com/questions/35691647/whats-the-difference-between-deletemany-and-remove-in-mongodb](http://stackoverflow.com/questions/35691647/whats-the-difference-between-deletemany-and-remove-in-mongodb)
 * [https://docs.mongodb.com/v3.2/reference/method/db.collection.deleteMany/](https://docs.mongodb.com/v3.2/reference/method/db.collection.deleteMany/)
