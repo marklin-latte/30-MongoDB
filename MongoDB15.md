@@ -6,7 +6,7 @@
 * 字串表達式(`string expression`)
 * 邏輯表達式(`logical expression`)
 
-## ~數學表達式~
+## ~ 數學表達式 ~
 以下列表為比較常用的數學表達式([全部在這](https://docs.mongodb.com/v3.2/meta/aggregation-quick-reference/#arithmetic-expressions))。
 
 | 表達式        | 說明           | 
@@ -65,7 +65,7 @@ db.order.aggregate ({
 
 >雖然這個範例只運用到少數幾個表達式，但事實上用法都大同小異，只要會了一個基本上其它的運用起來也會很順。
 
-## ~日期表達式~
+## ~ 日期表達式 ~
 這種類型的表達式，大部份都是用來將一串日期轉化成你想要的單位例如月、日、年等。
 
 | 表達式        | 說明           | 範圍 |
@@ -80,7 +80,7 @@ db.order.aggregate ({
 | `$minute`      | 提取出該時間的分鐘     | 0~59 |
 | `$second`      | 提取出該時間的秒     | 0~60 |
 
-### 實際運用 ~ 我們想取得`date`的詳細資料。
+### 實際運用 ~ 我們想取得 date 的詳細資料。
 
 我們來看看實際轉換的結果，假設我們有下列資料。
 
@@ -123,7 +123,7 @@ db.test.aggregate({
 }
 ```
 
-## ~字串表達式~
+## ~ 字串表達式 ~
 就是將聚合中的字串做一些哩哩扣扣的事情。
 
 | 表達式        | 說明           | 
@@ -134,7 +134,7 @@ db.test.aggregate({
 | `$toUpper`      |變大寫。 |
 | `$strcasecmp`      | 比較兩個字串是否相等，如果相等為0，如果字串ASCII碼大於另一字串則為1，否則為-1。     |
 
-### 實際應用 ~ 我們想取得`item`開頭為`B`的`document`，並且輸出的`describe`要全轉換為小寫。
+### 實際應用 ~ 我們想取得 item 開頭為 B 的 document ，並且輸出的 describe 要全轉換為小寫。
 
 下面是我們的資料。
 
@@ -182,7 +182,7 @@ db.test.aggregate(
 }
 ```
 
-## ~邏輯表達式~
+## ~ 邏輯表達式 ~
 下面是些比較常使用的邏輯表達式列表。
 
 | 表達式        | 說明           |使用| 
@@ -196,7 +196,7 @@ db.test.aggregate(
 | `$not`      |   針對表達示取反值  |`"$not" : expr`|
 | `$cond`      | 就是一般程式裡的`ifelse` |`"$cond":[boolExpr,trueExpr,falseExpr]`|
 
-### 實際應用 ~ 我想要計算出每筆訂單的實際收入，其中當數量大於200時打八折，最後在依`class`進行分組，算出各組的總收入。
+### 實際應用 ~ 我想要計算出每筆訂單的實際收入，其中當數量大於200時打八折，最後在依 class 進行分組，算出各組的總收入。
 
 首先一樣，先看看我們有的資料，如下。
 
@@ -248,11 +248,11 @@ db.orders.aggregate(
 { "_id" : "1", "result" : 4600 }
 ```
 
-## ~結語~
+## ~ 結語 ~
 本章介紹了很多的表達式，也都用實際的範例來說明如何使用，不過也只是用很基本的方法，
 如果要更熟練的使用這些表達式，筆者建議進行更多的實例練習，以及在練習時也要持續思考有沒有更好更快的方法，那相信你不需要多久的時間，就能很熟練囉。
 
-## ~參考資料~
+## ~ 參考資料 ~
 * [https://docs.mongodb.com/manual/reference/operator/aggregation/cond/](https://docs.mongodb.com/manual/reference/operator/aggregation/cond/)
 * [https://docs.mongodb.com/v3.2/reference/operator/aggregation/strcasecmp/#exp._S_strcasecmp](https://docs.mongodb.com/v3.2/reference/operator/aggregation/strcasecmp/#exp._S_strcasecmp)
 * [http://stackoverflow.com/questions/17044587/how-to-aggregate-sum-in-mongodb-to-get-a-total-count](http://stackoverflow.com/questions/17044587/how-to-aggregate-sum-in-mongodb-to-get-a-total-count)
