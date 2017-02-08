@@ -8,8 +8,8 @@
 
 `P.S` 三分之一囉，也代表基本的`mongodb`的`crud`要`Ending`囉。
 
-## ~ `Cursor`是啥 ~
----
+## ~ Cursor 是啥 ~
+
 `cursor`是`find`時回傳的結果，它可以讓使用者對最終結果進行有效的控制，它事實上也就是`Iterator 模式`的實作。
 
 除了可以控制最終結果以外，它另一個好處是可以一次查看一條結果，像之前`insertMany`時，他會一次回傳全部的結果，`mongodb shell`就會自動一直輸出，結果看不到後來執行的東西。
@@ -38,11 +38,11 @@ while (cursor.hasNext()){
 ![](http://yixiang8780.com/outImg/20161208-1.png)
 
 
-## ~ `Cursor`的方法 ~ 
----
+## ~ Cursor 的方法 ~ 
+
 `limit、skip、sort`這三個是很常用的`cursor`方法，主要功能就是限制、忽略、排序。
 
-### `limit`
+### limit
 要限制`find`結果的數量可以用`limit`，不過注意`limit`是指定上限而不是指定下限，
 使用方法如下，`limit(10)`就是代表最多只回傳`10`筆資料。
 
@@ -50,14 +50,14 @@ while (cursor.hasNext()){
 db.test.find().limit(10)
 
 ```
-### `skip`
+### skip
 當你想要忽略前面幾筆，在開始回傳值時，就是可以用`skip`，使用方法如下，`skip(10)`，代表忽略前十筆，然後在開始回傳，不過注意『 `skip`如果數量很多時速度會變很慢 』。
 
 ```
 db.test.find().skip(10)
 ```
 
-### `sort`
+### sort
 `sort`它主要就是將`find`出的資料，根據條件，進行排序。
 
 例如假設我們有以下的資料。
@@ -88,7 +88,7 @@ db.test.find().skip(10).limit(50).sort({x:1})
 ```
 
 ## ~ 搜尋的原理 ~
----
+
 在不考慮有索引`(下一篇會開始說)`的條件下，`mongodb`會如下圖一樣開始搜尋。
 
 ![](http://yixiang8780.com/outImg/20161208-4.png)
@@ -120,12 +120,12 @@ db.test.find({"x" : 999999}).limit(1).explain("executionStats")
 ![](http://yixiang8780.com/outImg/20161208-6.png)
 
 ## ~ 結語 ~
----
+
 或許會有人問我，為什麼要把搜尋原理放在搜尋的最後才講，這個麻，因為突然想到…… ， 不過我個人是比較喜好先寫的出來，在來想它的原理，這種道理就像大學如果一開始先教資料庫的正規化，然後才開始學著麼用資料庫的道理是一樣 ~ 不過這也只是個人的想法 ~  
 
 呼 ~ 今天鐵人賽總於進行了三分之一了，也終於將`mongodb`的基本`CRUD`都『簡單』的說明一下，記好是『簡單』，如果是『詳細』的話那大概30天都在寫它了，這樣太無趣了。
 
 ## ~ 參考資料 ~
----
+
 * [http://www.mongoing.com/eshu_explain3](http://www.mongoing.com/eshu_explain3)
 * [https://docs.mongodb.com/v3.0/reference/method/js-cursor/](https://docs.mongodb.com/v3.0/reference/method/js-cursor/)
