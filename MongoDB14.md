@@ -1,18 +1,24 @@
 # 30-14之聚合(1)---Aggregate Framework的哩哩扣扣
+
 在前面幾篇都是說明如何尋找到你想要的東西，而在接下來的聚合章節中，我們將說來學習到如何使用聚合工具，來幫助我們分析更多資料，以下為本篇要說明的事情。
 
 * 聚合`(aggregate)`是啥?有啥用。
 * `Mongodb`聚合工具`Aggregate Framework`。
 * 管道`pipeline`操作符號。
 
-## ~MongoDb`聚合工具之`Aggregate Framework~
-在前面幾篇文章中，我們學會了`mongodb`的`CRUD`，以及使用索引讓我們搜尋、排序速度更快速，那我們接下來幾篇要學什麼?答案就是`『分析』`是的我們將資料存放進`mongodb`最終的目的就是要使用分析，而`聚合`就是能幫助我們分析的工具，它能處理數據記錄並回傳結果。
+## ~ 聚合(aggregate)是啥?有啥用? ~
+
+在前面幾篇文章中，我們學會了`mongodb`的`CRUD`，以及使用索引讓我們搜尋、排序速度更快速，那我們接下來幾篇要學什麼?答案就是`『分析』`，是的，我們將資料存放進`mongodb`最終的目的就是要使用分析，而`聚合`就是能幫助我們分析的工具，它能處理數據記錄並回傳結果。
+
+## ~ MongoDb 聚合工具之 Aggregate Framework ~
+
 
 在`mongodb`中提供了`aggregate framework`的聚合工具，使用方法如下，其中`AGGREGATE_OPERATION`就是指你每一次的處理過程。
 
 ```
 db.collection.aggregate(AGGREGATE_OPERATION)
 ```
+
 先不考慮`mongodb`的語言，下面就是一個聚合的範例，`mongodb`的`aggregate framework`主要是建立在聚合管道(`pipeline`)基礎下，而這管道就是可以一連串的處理事件，以下列範例中你可以想成管道中有四節，『將每篇文章作者與like數抓取出來』為第一節，然後它處理完會產生資料，會再丟給第二節`[依作者進行分類]`，直到最後產生結果。
 
 ```
@@ -23,7 +29,9 @@ db.collection.aggregate(
 	[返like數前五多的結果]
 )
 ```
-## ~管道`pipeline`操作符號~
+
+## ~ 管道 pipeline 操作符號 ~
+
 
 `Aggregate framework`提供了很多的操作符號，來幫助你進行複雜的操作，每個符號都會接受一堆`document`，並對這些`document`做些操作，然後再將結果傳至下一個`pipeline`直到最後結果出現。
 
@@ -42,11 +50,13 @@ db.collection.aggregate(
    "assets" : 100000000
 }
 ```
+
 然後我們可以用`$project`來決定要那個欄位，我們選取`id`與`name`欄位。
 
 ```
 db.user.aggregate({ "$project" : { "id" : 1, "name" : 1 }})
 ```
+
 結果如下，當然他的功能沒著麼單純，它還可以和很多東西搭配，晚點會說。
 
 ```
@@ -73,11 +83,13 @@ db.user.aggregate({ "$project" : { "id" : 1, "name" : 1 }})
    "assets" : 1000000
 }
 ```
+
 然後我們要只選出`age`為`10至30`歲的人。
 
 ```
 db.user.aggregate({ "$match" : { age : { $gt : 10, $lte : 30 } }})
 ```
+
 結果
 
 ```
@@ -89,6 +101,7 @@ db.user.aggregate({ "$match" : { age : { $gt : 10, $lte : 30 } }})
   "assets" : 100000000 
 }
 ```
+
 ### $group
 `$group`它的功能就是用來分組，你可以決定要依照什麼來分組。
 
@@ -102,11 +115,13 @@ db.user.aggregate({ "$match" : { age : { $gt : 10, $lte : 30 } }})
 {"id" :5 , "status" : "x", "count" : 10},
 {"id" :6 , "status" : "x", "count" : 10}
 ```
+
 然後我們希望根據`status`來分成兩組。
 
 ```
 db.user.aggregate({"$group" : {"_id" : "$status"}})
 ```
+
 當然我自也可以在分組時進行一些統計，例如兩組的`count`總計。
 
 ```
@@ -114,6 +129,7 @@ db.user.aggregate(
 	{"$group" : {"_id" : "$status","total" : {"$sum" : "$count"}}
 })
 ```
+
 結果如下。
 
 ```
@@ -134,8 +150,8 @@ db.user.aggregate(
 		{"name" : "stanly","age":30}
 	]
 }
-
 ```
+
 然後我們希望將`fans`內的資料拆分成三個`document`。
 
 ```
@@ -157,8 +173,8 @@ db.user.aggregate({"$unwind" : "$fans"})
   "name" : "mark", 
   "fans" : { "name" : "stanly", "age" : 30 } 
 }
-
 ```
+
 ### $sort
 `$sort`它可以根據任何欄位進行排序，是的與搜尋時的用法一樣，但是有件事要注意。
 
@@ -172,6 +188,7 @@ db.user.aggregate({"$unwind" : "$fans"})
 {"name" : "max", "age" : 10}
 {"name" : "stanlly", "age" : 28}
 ```
+
 然後我們要根據`age`進行排序。
 
 ```
@@ -188,8 +205,8 @@ db.user.aggregate({"$sort" : { "age" : 1 }})
   "name" : "stanlly", "age" : 28 }
 { "_id" : ObjectId("584e71856f4811e2ad96504c"), 
   "name" : "steven", "age" : 38 }
-
 ```
+
 ### $limit
 就是可以限制回傳`document`的數量，大致使用法式如下，懶的講太多了。
 
@@ -203,9 +220,10 @@ db.user.aggregate({"$limit" : 5})
 
 ```
 db.user.aggregate({"$skip" : 5})
-
 ```
+
 ## ~操作符號的實際應用~
+
 上面將了不少的管道操作符號，不過也只是一個一個分開來使用，接下來我們組合起來一起使用，這才是聚合的真正用法，再開始之前我們複習一下，我們用個表個整理上述的操作符號功用。
 
 | 操作符號        | 功用           | 
@@ -255,8 +273,8 @@ db.user.aggregate({"$skip" : 5})
 	"fans" : [{"name" : "mark"}],
 	"phone" : "xxxxx"
 }
-
 ```
+
 ### 我們希望可以找出男性中第二年輕的人
 我們可以按照下面的步驟建立管道，來找出第二年輕的男性。
 
@@ -277,6 +295,7 @@ db.user.aggregate(
 	{ "$limit" : 1 }
 )
 ```
+
 然後執行結果正確，`jack`的確是第二年輕的男性。
 
 ```
@@ -287,8 +306,8 @@ db.user.aggregate(
  }
 ```
 
-
 ## ~結語~
+
 今天簡單的說明了聚合工具`Aggregate framework`的用法，以及管理的操作符號，不過還缺了一些東西，事實上每個管道內還可以在做更多的事情，這些下一篇文章將會說明到。
 
 ## ~參考資料~
