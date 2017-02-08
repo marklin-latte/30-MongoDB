@@ -45,7 +45,7 @@ docker network create my-mongo-cluster
 
 ![](http://yixiang8780.com/outImg/20161222-2.png)
 
-### Step2 建立三個`MongoDB`的`Container`，並加入至`my-mongo-cluster`這`network`中
+### Step2 建立三個 MongoDB 的 Container，並加入至 my-mongo-cluster 這 network 中
 
 首先來看看指令，然後我們來解釋一下每個指令是啥意思。
 
