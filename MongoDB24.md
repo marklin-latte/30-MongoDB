@@ -1,17 +1,17 @@
-# 30-24之分片Sharding(2)---Chunk的分配機制
+# 30-24之分片Sharding(2)---Chunk的札事
 在上一篇文章中說明完基本的分片概念後，我們本章節要更深的了解分片內的`chunk`，
 它是每個分片組成的東西，我們這篇將要說明它的拆分與分配機制。
 
 * `chunk`的分配與拆分。
 
-## ~ `chunk`的分配與拆分 ~
+## ~ chunk 的分配與拆分 ~
 在上一篇文章中，我們知道每個分片中都包含了多個`chunk`，而每`chunk`中，又包含了某個範圍的`document`組，我們先簡單來畫個圖複習一下。
 
 ![](http://yixiang8780.com/outImg/20161224-1.png)
 
 然後我們接下來要討論的就是，`mongodb`是如何拆分`chunk`和如何將`chunk`分片到`shard`裡，首先我們先來看看`chunk`的拆分。
 
-### `chunk`的拆分
+### chunk 的拆分
 首先我們先想一下，`chunk`它本身是一堆`document`的集合體，大概長降,我們使用上一章節的範例，來看一下`chunk`的詳細資訊，假設我們都已經分片好了，我們直接看結果。
 
 首先我們需要先移動到一個名為`config`的資料庫。
@@ -42,7 +42,7 @@ db.settings.save({"_id" : "chunksize" : "value" : 32})
 
 > `chunk` 越小時可以使分片的可以使分片的資料量更均衡，不會有差距太大的狀況，但缺點就是，因為小所以會常移動`chunk`，所以`mongos`壓力會比較重。
 
-### `chunk`的拆分實驗
+### chunk 的拆分實驗
 
 咱們來簡單的測試看看`chunk`的拆分，首先來建立一些資料，大小約為`4188890 byte`大概為`4mb`左右，然後我們的`chunk`大小預設為`1mb`，所以理論上應會開拆為3~4個`chunk`。
 
@@ -82,7 +82,7 @@ db.users.stats()
 
 > 這問題目前無解，官網目前也只說當`chunk`成長到超過設定大小時會進行分拆。[傳送門](https://docs.mongodb.com/v3.0/core/sharding-chunk-splitting/)給你看。
 
-### `chunk`的分配
+### chunk 的分配
 在說明完`chunk`的拆分後，我們要說明一下`chunk`的分配，也就是指`mongos`如何將`chunk`分配給分片。
 
 `mongos`中有個東西叫`balancer`，這東西就是負責`chunk`的搬移，它會週期性的檢查分片是否存在不均衡，如果有不均衡情況，它就會自動開始搬遷`chunk`，你可以根據下面指令來看看`balancer`的訊息。
@@ -109,7 +109,7 @@ db.locks.find()
 
 > mongodb有提供手動分配`chunk`的功能，所以在沒打開`balancer `的情況下也可手動將`chunk`分配給其它的分片。
 
-### `chunk`分配的實作。
+### chunk 分配的實作。
 首先我們先來看看我們的分片狀態如何，我們執行`sh.status()`，我們可以發現，所有的`chunk`都集中在`shared0000`，正常來說應該是平均分配，為啥了? 
 
 ![](http://yixiang8780.com/outImg/20161224-8.png)
