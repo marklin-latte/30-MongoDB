@@ -27,7 +27,8 @@
 * [30-14之聚合(1)---Aggregate Framework的哩哩扣扣](http://marklin-blog.logdown.com/posts/1394100-mongodb-polymerization-of-30-14-1-aggregate-framework-with-buckle)
 * [30-15之聚合(2)---Pipeline武器庫](http://marklin-blog.logdown.com/posts/1394127)
 * [30-16之聚合(3)---潮潮的MapReduce](http://marklin-blog.logdown.com/posts/1394143-30-16-polymerization-of-3-the-drying-of-mapreduce)
-可以分析後，我們發覺有些，地方效能還不是不太好，明明索引那些都處理好囉 ? 這時我們只能往架構方面來解決。
+
+可是分析後，我們發覺有些，地方效能還不是不太好，明明索引那些都處理好囉 ? 這時我們只能往架構方面來解決。
 
 * [30-17之MongoDB的設計---正規與反正規化的戰爭](http://marklin-blog.logdown.com/posts/1394159-mongodb-30-17-design-the-formal-war-with-anti-normalization)
 
