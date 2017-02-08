@@ -59,7 +59,7 @@ primaryDB.isMaster()
 
 ![](http://yixiang8780.com/outImg/20161221-4.png)
 
-## ~驗證一下有沒有備份到`secondary`節點~
+## ~驗證一下有沒有備份到 secondary 節點~
 
 首先我們先新增一些資料。
 
