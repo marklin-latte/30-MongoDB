@@ -7,8 +7,8 @@
 
 P.S `+u^8`~
 
-## `find`方法基本說明
----
+## find方法基本說明
+
 `mongodb`使用`find`來進行搜尋，它的第一個參數決定要那些資料，而第二個參數則決定要返回那些`key`。
 
 基本的使用範例如下，首先我們先建立一些資料。
@@ -36,8 +36,8 @@ db.user.find({"name":"mark"},{"id" : 1,"_id":0})
 
 ![](http://yixiang8780.com/outImg/20161206-2.png)
 
-## ~ `find`的搜尋條件 ~
----
+## ~ find的搜尋條件 ~
+
 這邊我們將要說明`find`常用搜尋條件，and、or、大於等於、大於、小於、小於等於、包含、不包含，有了這些條件我們就可以更方便的尋找你所需要的`document`。
 
 這邊簡單的整理成一張表來對應操作符號。
@@ -91,7 +91,7 @@ db.user.find(
 
 ![](http://yixiang8780.com/outImg/20161206-3.png)
 
-### 我想要尋找`fans`小於等於100，或是`likes`小於100的人。
+### 我想要尋找fans小於等於100，或是likes小於100的人。
 
 這時就需要用到`or`和`$lt`、`$lte`囉。
 
@@ -104,7 +104,7 @@ db.user.find(
 
 ![](http://yixiang8780.com/outImg/20161206-4.png)
 
-### 我想要尋找`age`為`25、60`的人。
+### 我想要尋找age為25、60的人。
 
 這時可用`$in`。
 
@@ -116,7 +116,7 @@ db.user.find({"age":{"$in":[25,60]}})
 
 ![](http://yixiang8780.com/outImg/20161206-5.png)
 
-### 我想要尋找`age`不為`25、60`的人，並且只給我它的`id`就好。
+### 我想要尋找age不為25、60的人，並且只給我它的id就好。
 
 這時可用`$nin`。
 
@@ -128,7 +128,7 @@ db.user.find({"age":{"$nin":[25,60]}},{"id":1})
 
 ![](http://yixiang8780.com/outImg/20161206-6.png)
 
-### 我想要尋找`likes`小於等於100的人(使用`$not`)
+### 我想要尋找likes小於等於100的人(使用$not)
 這邊事實上可以很簡單的用`$lte`，但因為我們要介紹一下`$not`所以會寫的比較麻煩點兒，
 而真正可以發揮`$not`功能時，是在和正規表達式聯合使用時，用來查找不匹配的`document`。
 
@@ -143,7 +143,7 @@ db.user.find({"likes":{"$not":{"$gt":100}}})
 ![](http://yixiang8780.com/outImg/20161206-7.png)
 
 
-### 我們想要找同時不滿足`fans`大於100人且`likes`大於500。
+### 我們想要找同時不滿足fans大於100人且likes大於500。
 
 這邊我們可以用`$nor`來尋找，它的意思就是選出所有不滿足條件的`document`。
 
@@ -154,7 +154,7 @@ db.user.find({"$nor":[{"fans":{"$lt":100}},{"likes":{"$lt":100}}]})
 ![](http://yixiang8780.com/outImg/20161206-8.png)
 
 ## ~ 結語 ~
----
+
 今天說明了很多的條件符號，可以簡單分成以以下兩類，邏輯符號與比較符號，運用這兩種符號就可以針對很多種情況下進行搜尋，當然還不只這些，明天將會繼續，我累了……。
 
 |         | 操作符號           | 
@@ -165,7 +165,7 @@ db.user.find({"$nor":[{"fans":{"$lt":100}},{"likes":{"$lt":100}}]})
 | 比較符號用法      | `{field: {$gt: value} } ` `{ field: { $in($nin): [<value1>, <value2>, ... <valueN> ] } }`     |
 
  ## ~ 參考資料 ~
- ---
+ 
  * [https://docs.mongodb.com/v3.0/reference/operator/query-geospatial/](https://docs.mongodb.com/v3.0/reference/operator/query-geospatial/)
  * [http://www.cnblogs.com/egger/p/3135847.html](http://www.cnblogs.com/egger/p/3135847.html)
  
